@@ -1,0 +1,32 @@
+<launch>
+    <!-- Utilisation de MAVROS pour la localisation si une branche dédiée à MAVROS est utilisée -->
+    <node pkg="mavros" type="node" name="mavros" output="screen">
+        <!-- Configurer la connexion MAVLink à la FCU -->
+        <param name="fcu_url" value="udp://:14540@localhost:14557" /> <!-- Adapter selon votre configuration FCU -->
+        <param name="gcs_url" value="" />
+        <param name="target_system_id" value="1" />
+        <param name="target_component_id" value="1" />
+
+        <!-- Plugins MAVROS pour la localisation et l'IMU -->
+        <param name="pluginlists" value="['imu', 'gps', 'local_position', 'setpoint_position']"/>
+        
+        <!-- Paramètres GPS d'origine pour la localisation absolue -->
+        <param name="gps/global_origin/lat" value="$(env OM_DATUM_LAT)" />
+        <param name="gps/global_origin/lon" value="$(env OM_DATUM_LONG)" />
+        <param name="gps/global_origin/alt" value="$(optenv OM_DATUM_HEIGHT 0)"/>
+    </node>
+
+    <!-- Optionnel : Utilisez les autres nœuds de localisation uniquement si certaines fonctionnalités ne sont pas couvertes par MAVROS -->
+    <arg name="use_legacy_localization" default="False"/>
+    <group unless="$(arg use_legacy_localization)">
+        <node pkg="xbot_positioning" type="xbot_positioning" name="xbot_positioning" output="screen" required="true">
+            <remap from="~imu_in" to="/mavros/imu/data"/>
+            <remap from="~wheel_ticks_in" to="/mower/wheel_ticks"/>
+            <remap from="~xb_pose_in" to="/mavros/local_position/pose"/>
+            <remap from="~xb_pose_out" to="xbot_positioning/xb_pose"/>
+            <param name="max_gps_accuracy" value="0.2"/>
+            <param name="antenna_offset_x" value="$(env OM_ANTENNA_OFFSET_X)"/>
+            <param name="antenna_offset_y" value="$(env OM_ANTENNA_OFFSET_Y)"/>
+        </node>
+    </group>
+</launch>

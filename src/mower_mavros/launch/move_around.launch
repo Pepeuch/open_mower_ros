@@ -1,0 +1,24 @@
+<launch>
+    <!-- Inclusion des fichiers de configuration nécessaires pour la communication, le déplacement et la localisation -->
+    <include file="$(find open_mower)/launch/include/_comms.launch"/>
+    <include file="$(find open_mower)/launch/include/_move_base.launch"/>
+    <include file="$(find open_mower)/launch/include/_localization.launch"/>
+
+    <!-- Service de carte pour gérer les informations de localisation et de cartographie -->
+    <node pkg="mower_map" type="mower_map_service" name="map_service" output="screen"/>
+
+    <!-- Nœud twist_mux pour gérer les commandes de vitesse en fonction de différentes sources -->
+    <node pkg="twist_mux" type="twist_mux" name="twist_mux" output="screen">
+        <remap from="cmd_vel_out" to="/cmd_vel"/>
+        <rosparam file="$(find open_mower)/params/twist_mux_topics.yaml" command="load"/>
+    </node>
+
+    <!-- Ajout du nœud MAVROS pour supporter les commandes et la télémétrie MAVLink -->
+    <node pkg="mavros" type="node" name="mavros" output="screen">
+        <!-- Configurer l’URL de connexion pour la FCU MAVLink (adapter selon votre configuration MAVLink) -->
+        <param name="fcu_url" value="udp://:14540@localhost:14557" />
+        <param name="gcs_url" value="" />
+        <param name="target_system_id" value="1" />
+        <param name="target_component_id" value="1" />
+    </node>
+</launch>

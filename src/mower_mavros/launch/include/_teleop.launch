@@ -1,0 +1,33 @@
+<launch>
+    <group if="$(eval env('OM_MOWER_GAMEPAD') == 'xbox360')">
+        <node name="joy" pkg="joy" type="joy_node" required="true">
+            <param name="~autorepeat_rate" value="10.0"/>
+            <param name="~coalesce_interval" value="0.06"/>
+        </node>
+
+        <node name="joy_teleop" pkg="teleop_twist_joy" type="teleop_node" required="true">
+            <!-- Remappage vers le topic MAVROS pour les commandes de vitesse -->
+            <remap from="cmd_vel" to="/mavros/setpoint_velocity/cmd_vel"/>
+            <param name="~scale_linear" value="0.5"/>
+            <param name="~scale_angular" value="1.5"/>
+            <param name="~scale_linear_turbo" value="1.0"/>
+            <param name="~scale_angular_turbo" value="3.0"/>
+            <param name="~enable_turbo_button" value="4"/>
+        </node>
+    </group>
+
+    <group unless="$(eval env('OM_MOWER_GAMEPAD') == 'xbox360')">
+        <node name="joy" pkg="joy" type="joy_node" required="true" >
+            <remap from="/joy" to="/teleop_joy"/>
+            <param name="~coalesce_interval" value="0.06"/>
+        </node>
+
+        <rosparam file="$(find open_mower)/params/gamepads/$(env OM_MOWER_GAMEPAD).yaml" command="load"/>
+
+        <node name="joy_teleop" pkg="joy_teleop" type="joy_teleop.py" required="true">
+            <remap from="/joy" to="/teleop_joy"/>
+            <!-- Remappage vers MAVROS pour transmettre les commandes de mouvement -->
+            <remap from="cmd_vel" to="/mavros/setpoint_velocity/cmd_vel"/>
+        </node>
+    </group>
+</launch>

@@ -15,10 +15,13 @@
   <build_depend>mower_map</build_depend>
   <build_depend>twist_mux_msgs</build_depend>
   <build_depend>rtcm_msgs</build_depend>
+  <build_depend>mavros</build_depend> <!-- Ajout de MAVROS -->
 
   <build_export_depend>mower_msgs</build_export_depend>
   <build_export_depend>mower_simulation</build_export_depend>
   <build_export_depend>mower_map</build_export_depend>
+  <build_export_depend>mavros</build_export_depend> <!-- Ajout de MAVROS -->
+
 
   <exec_depend>mower_msgs</exec_depend>
   <exec_depend>mower_simulation</exec_depend>
@@ -34,6 +37,7 @@
   <exec_depend>imu_filter_madgwick</exec_depend>
   <exec_depend>twist_mux</exec_depend>
   <exec_depend>rtcm_msgs</exec_depend>
+  <exec_depend>mavros</exec_depend> <!-- Ajout de MAVROS -->
 
 
   <!-- The export tag contains other, unspecified, tags -->

@@ -1,0 +1,15 @@
+<launch>
+    <!-- MAVROS pour la communication MAVLink avec la Flight Control Unit (FCU) -->
+    <node pkg="mavros" type="node" name="mavros" output="screen">
+        <param name="fcu_url" value="udp://:14540@localhost:14557" /> <!-- Adapter en fonction de votre configuration FCU -->
+        <param name="gcs_url" value="" />
+        <param name="target_system_id" value="1" />
+        <param name="target_component_id" value="1" />
+
+        <!-- Activer les plugins MAVROS nécessaires pour votre projet -->
+        <param name="pluginlists" value="['gps', 'imu', 'setpoint_velocity', 'local_position']"/>
+    </node>
+
+    <!-- rosbridge pour permettre aux clients web de communiquer avec ROS via WebSocket -->
+    <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
+</launch>

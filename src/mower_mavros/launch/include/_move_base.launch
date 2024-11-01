@@ -1,0 +1,32 @@
+<launch>
+  <!-- Nœud de navigation move_base_flex pour la planification des trajets -->
+  <node name="move_base_flex" pkg="mbf_costmap_nav" type="mbf_costmap_nav" required="true" output="screen">
+    <!-- Redirige les commandes de navigation vers MAVROS -->
+    <remap from="cmd_vel" to="/mavros/setpoint_velocity/cmd_vel"/>
+
+    <!-- Charger les configurations de cartes de coût et de planification -->
+    <rosparam file="$(find open_mower)/params/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find open_mower)/params/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find open_mower)/params/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find open_mower)/params/global_costmap_params.yaml" command="load" />
+    <rosparam file="$(find open_mower)/params/move_base_flex.yaml" command="load"/>
+    <rosparam file="$(find open_mower)/params/ftc_local_planner.yaml" command="load" />
+    <rosparam file="$(find open_mower)/params/docking_ftc_local_planner.yaml" command="load" />
+    <rosparam file="$(find open_mower)/params/global_planner_params.yaml" command="load" />
+  </node>
+
+  <!-- Nœud de relais pour les commandes de planification et de déplacement -->
+  <node name="move_base_legacy_relay" pkg="mbf_costmap_nav" type="move_base_legacy_relay.py">
+    <param name="base_local_planner" value="FTCPlanner" />
+    <param name="base_global_planner" value="GlobalPlanner" />
+  </node>
+
+  <!-- Nœud MAVROS pour gérer la communication avec le contrôleur de vol -->
+  <node pkg="mavros" type="node" name="mavros" output="screen">
+    <param name="fcu_url" value="udp://:14540@localhost:14557" /> <!-- Adapter selon votre configuration FCU -->
+    <param name="gcs_url" value="" />
+    <param name="target_system_id" value="1" />
+    <param name="target_component_id" value="1" />
+    <param name="pluginlists" value="['setpoint_velocity', 'local_position']"/>
+  </node>
+</launch>

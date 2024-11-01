@@ -1,0 +1,46 @@
+<launch>
+    <include file="$(find open_mower)/launch/include/_comms.launch"/>
+    <include file="$(find open_mower)/launch/include/_move_base.launch"/>
+    <include file="$(find open_mower)/launch/include/_localization.launch"/>
+    <include file="$(find open_mower)/launch/include/_teleop.launch"/>
+    <include file="$(find open_mower)/launch/include/_record.launch">
+        <arg name="prefix" value="mow_area"/>
+    </include>
+
+    <arg name="battery_empty_voltage" value="$(env OM_BATTERY_EMPTY_VOLTAGE)" />
+    <arg name="battery_critical_voltage" value="$(optenv OM_BATTERY_CRITICAL_VOLTAGE)" />
+    <arg name="battery_critical_high_voltage" value="$(optenv OM_BATTERY_CRITICAL_HIGH_VOLTAGE)" />
+
+    <node pkg="mower_map" type="mower_map_service" name="map_service" output="screen"/>
+    <node pkg="mower_logic" type="mower_logic" name="mower_logic" output="screen">
+        <!-- paramètres spécifiques à la gestion et logique du robot -->
+    </node>
+    <node pkg="slic3r_coverage_planner" type="slic3r_coverage_planner" name="slic3r_coverage_planner" output="screen"/>
+
+    <node pkg="twist_mux" type="twist_mux" name="twist_mux" output="screen">
+        <remap from="cmd_vel_out" to="/cmd_vel"/>
+        <rosparam file="$(find open_mower)/params/twist_mux_topics.yaml"  command="load"/>
+    </node>
+
+    <node pkg="xbot_monitoring" type="xbot_monitoring" name="xbot_monitoring" output="screen" respawn="true" respawn_delay="10">
+        <!-- paramètres de monitoring -->
+    </node>
+
+    <node pkg="xbot_monitoring" type="heatmap_generator" name="heatmap_generator" output="screen" respawn="true" respawn_delay="10" unless="$(eval optenv('OM_HEATMAP_SENSOR_IDS', 'UNSET') == 'UNSET')">
+        <param name="sensor_ids" value="$(optenv OM_HEATMAP_SENSOR_IDS)" />
+    </node>
+
+    <node pkg="xbot_remote" type="xbot_remote" name="xbot_remote" output="screen" respawn="true" respawn_delay="10">
+        <remap from="/xbot_remote/cmd_vel" to="/joy_vel"/>
+    </node>
+
+    <node pkg="mower_logic" type="monitoring" name="monitoring" output="screen" respawn="true" respawn_delay="10"/>
+
+    <!-- Ajout du nœud MAVROS pour permettre les commandes et la télémétrie MAVLink -->
+    <node pkg="mavros" type="node" name="mavros" output="screen">
+        <param name="fcu_url" value="udp://:14540@localhost:14557" /> <!-- adapter l'URL selon votre configuration FCU -->
+        <param name="gcs_url" value="" />
+        <param name="target_system_id" value="1" />
+        <param name="target_component_id" value="1" />
+    </node>
+</launch>

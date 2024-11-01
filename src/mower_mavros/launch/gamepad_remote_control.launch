@@ -1,0 +1,18 @@
+<launch>
+    <!-- Inclusion des fichiers de configuration nécessaires pour la communication, la localisation et la téléopération -->
+    <include file="$(find open_mower)/launch/include/_comms.launch"/>
+    <include file="$(find open_mower)/launch/include/_localization.launch"/>
+    <include file="$(find open_mower)/launch/include/_teleop.launch"/>
+
+    <!-- Service de carte pour gérer les informations de localisation et de cartographie -->
+    <node pkg="mower_map" type="mower_map_service" name="map_service" output="screen"/>
+
+    <!-- Ajout du nœud MAVROS pour supporter les commandes et la télémétrie MAVLink -->
+    <node pkg="mavros" type="node" name="mavros" output="screen">
+        <!-- Configurer l’URL de connexion pour la FCU MAVLink (adapter selon votre configuration MAVLink) -->
+        <param name="fcu_url" value="udp://:14540@localhost:14557" />
+        <param name="gcs_url" value="" />
+        <param name="target_system_id" value="1" />
+        <param name="target_component_id" value="1" />
+    </node>
+</launch>

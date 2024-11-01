@@ -1,0 +1,19 @@
+<launch>
+    <!-- Configuration de MAVROS pour prendre en charge le GPS et la localisation RTK -->
+    <node pkg="mavros" type="node" name="mavros" output="screen">
+        <!-- Configurer l’URL MAVLink pour la connexion à la FCU (Flight Control Unit) -->
+        <param name="fcu_url" value="udp://:14540@localhost:14557" /> <!-- Adapter en fonction de votre configuration -->
+        <param name="gcs_url" value="" />
+        <param name="target_system_id" value="1" />
+        <param name="target_component_id" value="1" />
+
+        <!-- Paramètres spécifiques MAVROS pour la gestion du GPS -->
+        <param name="pluginlists" value="['gps', 'global_position']"/>
+        <param name="gps/global_origin/lat" value="$(env OM_DATUM_LAT)" />
+        <param name="gps/global_origin/lon" value="$(env OM_DATUM_LONG)" />
+        <param name="gps/global_origin/alt" value="$(optenv OM_DATUM_HEIGHT 0)"/>
+    </node>
+
+    <!-- Option pour inclure le client NTRIP si requis pour la correction RTK -->
+    <include if="$(env OM_USE_NTRIP)" file="$(find open_mower)/launch/include/_ntrip_client.launch" />
+</launch>
