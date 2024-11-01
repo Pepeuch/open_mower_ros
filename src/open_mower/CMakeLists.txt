@@ -10,6 +10,8 @@ project(open_mower)
 find_package(catkin REQUIRED COMPONENTS
   mower_msgs
   mower_simulation
+  mavros
+  mavros_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -104,7 +106,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES open_mower
-#  CATKIN_DEPENDS mower_msgs mower_simulation
+CATKIN_DEPENDS mower_msgs mower_simulation mavros mavros_msgs
 #  DEPENDS system_lib
 )
 
