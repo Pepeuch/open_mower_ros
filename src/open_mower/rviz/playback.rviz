@@ -1,3 +1,4 @@
+## Adapted for MAVROS by [Pepeuch] on [11/1/2024]
 Panels:
   - Class: rviz/Displays
     Help Height: 78
@@ -56,7 +57,7 @@ Visualization Manager:
         Z: 0
       Plane: XY
       Plane Cell Count: 10
-      Reference Frame: <Fixed Frame>
+      Reference Frame: map
       Value: true
     - Angle Tolerance: 0.10000000149011612
       Class: rviz/Odometry
@@ -222,7 +223,7 @@ Visualization Manager:
       Radius: 0.029999999329447746
       Shaft Diameter: 0.10000000149011612
       Shaft Length: 0.10000000149011612
-      Topic: /move_base_flex/FreePlanner/local_plan
+      Topic: /mavros/setpoint_position/local
       Unreliable: false
       Value: true
     - Class: rviz/Marker
@@ -271,7 +272,7 @@ Visualization Manager:
       Radius: 0.029999999329447746
       Shaft Diameter: 0.10000000149011612
       Shaft Length: 0.10000000149011612
-      Topic: /move_base_flex/GlobalPlanner/plan
+      Topic: /mavros/setpoint_position/local
       Unreliable: false
       Value: true
     - Alpha: 1
@@ -438,7 +439,7 @@ Visualization Manager:
       Name: Current View
       Near Clip Distance: 0.009999999776482582
       Pitch: 1.5547963380813599
-      Target Frame: <Fixed Frame>
+      Target Frame: map
       Yaw: 0.540392279624939
     Saved: ~
 Window Geometry:

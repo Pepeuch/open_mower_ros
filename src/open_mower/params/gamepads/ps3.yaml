@@ -1,55 +1,58 @@
+# Configuration pour la manette PS3 avec MAVROS et ArduPilot
+
+# Commande de mouvement via le topic MAVROS pour les commandes de vitesse
 teleop:
   move:
     type: topic
     message_type: geometry_msgs/Twist
-    topic_name: joy_vel
-    deadman_buttons: [0]
+    topic_name: /mavros/setpoint_velocity/cmd_vel  # Utilise le topic MAVROS pour les commandes de vitesse
+    deadman_buttons: [0]  # Bouton qui doit être maintenu pour activer le mouvement
     axis_mappings:
-      -
-        axis: 1
+      - axis: 1
         target: linear.x
-        scale: 1
-      -
-        axis: 0
+        scale: 1.0
+      - axis: 0
         target: angular.z
-        scale: 1
+        scale: 1.0
+      - axis: 2
+        target: linear.y
+        scale: 1.0
 
-  record_polygon:
-    type: topic
-    message_type: std_msgs/Bool
-    topic_name: record_polygon
-    deadman_buttons: [1]
-    message_value:
-      -
-        target: data
-        value: 1
+# Configuration pour les commandes d'enregistrement de zones (nécessite un nœud ROS séparé pour les interpréter)
+record_polygon:
+  type: service
+  service_name: /mower_logic/record_polygon
+  service_type: std_srvs/Trigger
+  button: 1  # Bouton pour lancer l'enregistrement d'une zone polygonale
 
-  record_dock:
-    type: topic
-    message_type: std_msgs/Bool
-    topic_name: record_dock
-    deadman_buttons: [2]
-    message_value:
-      -
-        target: data
-        value: 1
+record_dock:
+  type: service
+  service_name: /mower_logic/record_dock
+  service_type: std_srvs/Trigger
+  button: 2  # Bouton pour lancer l'enregistrement de la zone de dock
 
-  record_mowing:
-    type: topic
-    message_type: std_msgs/Bool
-    topic_name: record_mowing
-    deadman_buttons: [3, 14]
-    message_value:
-      -
-        target: data
-        value: 1
+# Commande pour arrêter le mouvement
+stop:
+  type: topic
+  message_type: std_msgs/Empty
+  topic_name: /mavros/setpoint_velocity/cmd_vel
+  button: 3  # Bouton pour arrêter le mouvement
 
-  record_navigation:
-    type: topic
-    message_type: std_msgs/Bool
-    topic_name: record_navigation
-    deadman_buttons: [3, 13]
-    message_value:
-      -
-        target: data
-        value: 1
+# Configurations additionnelles pour d'autres actions
+automatic_mode:
+  type: service
+  service_name: /mower_logic/automatic_mode
+  service_type: std_srvs/SetBool
+  button: 4  # Activer ou désactiver le mode automatique
+
+manual_mode:
+  type: service
+  service_name: /mower_logic/manual_mode
+  service_type: std_srvs/SetBool
+  button: 5  # Activer le mode manuel
+
+# Boutons pour gérer le turbo (accélération maximale)
+turbo:
+  type: scaling
+  scale: 2.0  # Facteur de multiplication pour le mode turbo
+  buttons: [6]  # Bouton à maintenir pour activer le turbo

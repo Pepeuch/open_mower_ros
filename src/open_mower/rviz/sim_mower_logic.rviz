@@ -1,3 +1,4 @@
+## Adapted for MAVROS by [Pepeuch] on [11/1/2024]
 Panels:
   - Class: rviz/Displays
     Help Height: 78
@@ -54,7 +55,7 @@ Visualization Manager:
         Z: 0
       Plane: XY
       Plane Cell Count: 10
-      Reference Frame: <Fixed Frame>
+      Reference Frame: map
       Value: true
     - Alpha: 0.699999988079071
       Class: rviz/Map
@@ -106,7 +107,7 @@ Visualization Manager:
         Shaft Length: 0.20000000298023224
         Shaft Radius: 0.05000000074505806
         Value: Arrow
-      Topic: /mower/odom
+      Topic: /mavros/local_position/odom
       Unreliable: false
       Value: true
     - Class: rviz/TF
@@ -154,7 +155,7 @@ Visualization Manager:
       Radius: 0.029999999329447746
       Shaft Diameter: 0.10000000149011612
       Shaft Length: 0.10000000149011612
-      Topic: /move_base_flex/GlobalPlanner/plan
+      Topic: /mavros/setpoint_position/local
       Unreliable: false
       Value: true
     - Alpha: 1
@@ -178,7 +179,7 @@ Visualization Manager:
       Radius: 0.029999999329447746
       Shaft Diameter: 0.10000000149011612
       Shaft Length: 0.10000000149011612
-      Topic: /move_base_flex/FreePlanner/local_plan
+      Topic: /mavros/setpoint_position/local
       Unreliable: false
       Value: true
     - Class: rviz/Marker
@@ -358,7 +359,7 @@ Visualization Manager:
       Name: Current View
       Near Clip Distance: 0.009999999776482582
       Scale: -47.2093620300293
-      Target Frame: <Fixed Frame>
+      Target Frame: map
       X: 21.94986343383789
       Y: -1.2103580236434937
     Saved:
@@ -373,7 +374,7 @@ Visualization Manager:
         Name: TopDownOrtho
         Near Clip Distance: 0.009999999776482582
         Scale: 71.52006530761719
-        Target Frame: <Fixed Frame>
+        Target Frame: map
         X: 0
         Y: 0
 Window Geometry:
