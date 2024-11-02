@@ -1,3 +1,4 @@
+## Adapted for MAVROS by [Pepeuch] on [11/1/2024]
 cmake_minimum_required(VERSION 3.0.2)
 project(open_mower)
 

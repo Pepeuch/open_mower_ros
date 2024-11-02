@@ -1,20 +1,43 @@
-<!--
-    Use this file to record new mowing and navigation areas in the simulator.
- -->
+
+// Created by Clemens Elflein
+// Adapted for MAVROS by [Pepeuch] on [11/1/2024]
 <launch>
+    <!-- Lancement de RViz avec le fichier de configuration adapté à MAVROS -->
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(find mower_utils)/rviz/planner_test.rviz" required="true" />
+
+    <!-- Service de carte pour le robot tondeuse -->
     <node pkg="mower_map" type="mower_map_service" name="mower_map" required="true" />
+
+    <!-- Planificateur de couverture basé sur slic3r -->
     <node pkg="slic3r_coverage_planner" type="slic3r_coverage_planner" name="slic3r_coverage_planner" required="false" />
 
+    <!-- Nœud MAVROS pour la communication MAVLink -->
+    <node pkg="mavros" type="node" name="mavros" required="true">
+        <param name="fcu_url" value="udp://:14540@localhost:14557" /> <!-- Adapter selon votre configuration -->
+        <param name="gcs_url" value="" />
+        <param name="target_system_id" value="1" />
+        <param name="target_component_id" value="1" />
+        <param name="pluginlists" value="['gps', 'local_position', 'setpoint_position']"/>
+    </node>
+
+    <!-- Nœud de test du planificateur (planner_test) pour générer et envoyer le chemin -->
     <node
-            if="$(eval optenv('START_PLANNER', True))"
-            pkg="mower_utils"
-            type="planner_test"
-            name="planner_test"
-            required="false"
+        if="$(eval optenv('START_PLANNER', True))"
+        pkg="mower_utils"
+        type="planner_test"
+        name="planner_test"
+        required="false"
     >
         <param name="area_index" value="$(eval optenv('AREA_INDEX', 0))"/>
         <param name="outline_count" value="$(eval optenv('OM_OUTLINE_COUNT', 10))"/>
     </node>
-<!--    <node pkg="mower_logic" type="mower_logic" name="mower_logic" required="true" />-->
+
+    <!-- Convertisseur de pose pour adapter les messages de MAVROS (mavros_pose_converter) -->
+    <node pkg="mower_utils" type="mavros_pose_converter" name="mavros_pose_converter" required="false">
+        <param name="topic" value="/mavros/local_position/pose"/>
+        <param name="frame" value="map"/>
+    </node>
+
+    <!-- Nœud logic de tonte (optionnel) -->
+    <!-- <node pkg="mower_logic" type="mower_logic" name="mower_logic" required="true" /> -->
 </launch>

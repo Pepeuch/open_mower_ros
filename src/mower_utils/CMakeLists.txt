@@ -1,3 +1,4 @@
+## Adapted for MAVROS by [Pepeuch] on [11/1/2024]
 cmake_minimum_required(VERSION 3.0.2)
 project(mower_utils)
 
@@ -8,12 +9,14 @@ project(mower_utils)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  open_mower
-  roscpp
-        xbot_msgs
-        geometry_msgs
-        mower_map
-        slic3r_coverage_planner
+open_mower
+roscpp
+xbot_msgs
+geometry_msgs
+mower_map
+slic3r_coverage_planner
+mavros
+mavros_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -157,11 +160,10 @@ add_executable(planner_test
         )
 add_dependencies(planner_test ${catkin_EXPORTED_TARGETS} ${${PROJECT_NAME}_EXPORTED_TARGETS})
 target_link_libraries(planner_test ${catkin_LIBRARIES})
-add_executable(xbot_pose_converter
-        src/xbot_pose_converter.cpp
+add_executable(mavros_pose_converter
+src/mavros_pose_converter.cpp  # Renommé pour refléter la version MAVROS
         )
-add_dependencies(xbot_pose_converter ${catkin_EXPORTED_TARGETS} ${${PROJECT_NAME}_EXPORTED_TARGETS})
-target_link_libraries(xbot_pose_converter ${catkin_LIBRARIES})
+add_dependencies(mavros_pose_converter ${catkin_EXPORTED_TARGETS} ${${PROJECT_NAME}_EXPORTED_TARGETS})
 #############
 ## Install ##
 #############
@@ -211,7 +213,7 @@ target_link_libraries(xbot_pose_converter ${catkin_LIBRARIES})
 ## Add gtest based cpp test target and link libraries
 # catkin_add_gtest(${PROJECT_NAME}-test test/test_mower_utils.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
-#   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
+target_link_libraries(mavros_pose_converter ${catkin_LIBRARIES})
 # endif()
 
 ## Add folders to be run by python nosetests

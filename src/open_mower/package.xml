@@ -1,3 +1,5 @@
+// Created by Clemens Elflein
+// Adapted for MAVROS by [Pepeuch] on [11/1/2024]
 <?xml version="1.0"?>
 <package format="2">
   <name>open_mower</name>
