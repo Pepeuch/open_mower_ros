@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>mower_msgs</name>
+  <version>0.0.0</version>
+  <description>Messages and services for mower control integration with MAVROS.</description>
+
+  <maintainer email="pepeuch@gmail.com">Pepeuch</maintainer>
+  <license>CC BY-NC-SA 4.0</license>
+
+  <url type="website">https://github.com/Pepeuch/open_mower_ros/tree/MavROS</url>
+
+  <!-- Dépendances pour construire et générer les messages et services -->
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>message_generation</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>mavros_msgs</build_depend>
+  <!-- Si les messages XESC sont nécessaires -->
+  <!-- <build_depend>xesc_msgs</build_depend>   -->
+
+  <!-- Dépendances pour l'exécution des messages et services générés -->
+  <exec_depend>message_runtime</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>mavros_msgs</exec_depend>
+  <!-- Si les messages XESC sont nécessaires -->
+  <!--<exec_depend>xesc_msgs</exec_depend> -->
+
+  <export>
+    <!-- Export nécessaire pour les configurations externes si besoin -->
+  </export>
+</package>

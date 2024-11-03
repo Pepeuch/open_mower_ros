@@ -1,0 +1,28 @@
+cmake_minimum_required(VERSION 3.0.2)
+project(mower_control)
+
+find_package(catkin REQUIRED COMPONENTS
+  roscpp
+  std_msgs
+  mower_msgs         # Dépendance vers vos messages personnalisés
+  mavros_msgs        # Pour l'intégration avec MAVROS
+)
+
+catkin_package(
+  CATKIN_DEPENDS roscpp std_msgs mower_msgs mavros_msgs
+)
+
+include_directories(
+  ${catkin_INCLUDE_DIRS}
+)
+
+# Ajout des exécutables
+add_executable(esc_status_publisher src/esc_status_publisher.cpp)
+target_link_libraries(esc_status_publisher ${catkin_LIBRARIES})
+
+add_executable(mower_control_service src/mower_control_service.cpp)
+target_link_libraries(mower_control_service ${catkin_LIBRARIES})
+
+# Déclaration des messages et services
+add_dependencies(esc_status_publisher ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(mower_control_service ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
