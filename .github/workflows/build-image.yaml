@@ -10,13 +10,13 @@ on:
         type: boolean
   push:
     branches:
-      - 'Mowgli-compatible'
+      - 'Mowgli-test'
       - 'releases/**'
     tags:
       - 'v*'
   pull_request:
     branches:
-      - 'Mowgli-compatible'
+      - 'Mowgli-test'
 
 # Allow stopping obsolete workflows
 concurrency:
